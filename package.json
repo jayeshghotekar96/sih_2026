@@ -4,6 +4,7 @@
   "private": true,
   "description": "DecentraX - SIH 2026 Problem Statement SIH26125 (Bharat Electronics Limited)",
   "scripts": {
+    "postinstall": "npm --prefix frontend install",
     "build": "npm --prefix frontend run build",
     "contracts:compile": "npm --prefix contracts run compile",
     "contracts:test": "npm --prefix contracts test",
