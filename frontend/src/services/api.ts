@@ -1,6 +1,7 @@
 import { AuditLogEntry } from '../types';
 
-const API_BASE = '/api';
+const RAW_BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+const API_BASE = RAW_BACKEND_URL ? (RAW_BACKEND_URL.endsWith('/api') ? RAW_BACKEND_URL : `${RAW_BACKEND_URL}/api`) : '/api';
 
 export const api = {
   // IPFS Metadata Upload
