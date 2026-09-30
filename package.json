@@ -1,0 +1,13 @@
+{
+  "name": "decentrax-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DecentraX - SIH 2026 Problem Statement SIH26125 (Bharat Electronics Limited)",
+  "scripts": {
+    "contracts:compile": "npm --prefix contracts run compile",
+    "contracts:test": "npm --prefix contracts test",
+    "contracts:deploy": "npm --prefix contracts run deploy:local",
+    "backend:start": "npm --prefix backend start",
+    "frontend:dev": "npm --prefix frontend run dev"
+  }
+}
