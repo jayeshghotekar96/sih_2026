@@ -1,6 +1,12 @@
 import { AuditLogEntry } from '../types';
 
-const RAW_BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+const metaEnv = (import.meta as any)?.env || {};
+const DEFAULT_REMOTE_BACKEND = 'https://sih-2026-1dai.onrender.com';
+const RAW_BACKEND_URL = (
+  metaEnv.VITE_BACKEND_URL ||
+  metaEnv.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? '' : DEFAULT_REMOTE_BACKEND)
+).trim().replace(/\/+$/, '');
 const API_BASE = RAW_BACKEND_URL ? (RAW_BACKEND_URL.endsWith('/api') ? RAW_BACKEND_URL : `${RAW_BACKEND_URL}/api`) : '/api';
 
 export const api = {
