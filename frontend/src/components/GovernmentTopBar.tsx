@@ -1,63 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { useWeb3 } from '../hooks/useWeb3';
-import { Search, Globe, Eye, Wifi, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { NationalEmblem } from './NationalEmblem';
+import { ChevronDown } from 'lucide-react';
 
 export const GovernmentTopBar: React.FC = () => {
-  const { chainId, isConnected, isCorrectNetwork, networkName, account } = useWeb3();
-  const [lang, setLang] = useState<'EN' | 'HI'>('EN');
+  const [lang, setLang] = useState<'English' | 'हिन्दी'>('English');
+  const [fontSize, setFontSize] = useState<'sm' | 'base' | 'lg'>('base');
 
   return (
-    <div className="bg-[#1E293B] text-slate-300 text-[11px] py-1 px-4 border-b border-slate-700 select-none">
+    <div className="bg-[#0B192C] text-slate-300 text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-800 select-none">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
-        {/* Left: Official Indian Ministry of Defence & Government Tag */}
-        <div className="flex items-center space-x-3 text-[11px] font-medium tracking-wide">
-          <span className="text-white font-semibold flex items-center gap-1.5">
-            <span className="w-2.5 h-1.5 bg-gradient-to-b from-amber-500 via-white to-emerald-600 inline-block rounded-xs"></span>
-            भारत सरकार | Government of India
-          </span>
+        {/* Left: Indian National Emblem & Ministries */}
+        <div className="flex items-center space-x-3">
+          <NationalEmblem className="w-4 h-5 text-white fill-current opacity-95 shrink-0" />
+          <span className="text-white font-medium">भारत सरकार</span>
           <span className="text-slate-500">|</span>
-          <span className="text-slate-300">
-            रक्षा मंत्रालय | Ministry of Defence
-          </span>
-          <span className="hidden lg:inline text-slate-500">|</span>
-          <span className="hidden lg:inline text-amber-300 font-medium">
-            Smart India Hackathon 2026 (SIH26125)
-          </span>
+          <span className="text-slate-200">Government of India</span>
+          <span className="text-slate-600 hidden sm:inline">|</span>
+          <span className="text-slate-300 hidden sm:inline">रक्षा मंत्रालय</span>
+          <span className="text-slate-500 hidden sm:inline">|</span>
+          <span className="text-slate-300 hidden sm:inline">Ministry of Defence</span>
         </div>
 
-        {/* Right: Accessibility Controls & Network Telemetry */}
-        <div className="flex items-center space-x-3 text-[11px]">
-          <span className="hover:text-white cursor-pointer hidden sm:inline">
-            Skip to main content
-          </span>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <span className="hover:text-white cursor-pointer hidden sm:inline flex items-center gap-1">
-            <Eye className="w-3 h-3 text-slate-400" />
+        {/* Right: Accessibility Controls & Language Dropdown */}
+        <div className="flex items-center space-x-3 text-xs text-slate-300">
+          <button className="hover:text-white transition-colors hidden md:inline">
+            Skip to Main Content
+          </button>
+          <span className="text-slate-600 hidden md:inline">|</span>
+          <button className="hover:text-white transition-colors hidden sm:inline">
             Screen Reader
-          </span>
+          </button>
           <span className="text-slate-600 hidden sm:inline">|</span>
 
-          {/* Language Switcher */}
-          <button
-            onClick={() => setLang(lang === 'EN' ? 'HI' : 'EN')}
-            className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold border border-slate-600 text-[10px]"
-          >
-            {lang === 'EN' ? 'हिन्दी' : 'English'}
-          </button>
+          {/* Font Resizing */}
+          <div className="flex items-center space-x-1.5">
+            <button
+              onClick={() => setFontSize('sm')}
+              className={`px-1 py-0.5 rounded hover:text-white ${fontSize === 'sm' ? 'text-sky-400 font-bold' : ''}`}
+              title="Decrease Font"
+            >
+              A-
+            </button>
+            <button
+              onClick={() => setFontSize('base')}
+              className={`px-1 py-0.5 rounded hover:text-white ${fontSize === 'base' ? 'text-sky-400 font-bold' : ''}`}
+              title="Standard Font"
+            >
+              A
+            </button>
+            <button
+              onClick={() => setFontSize('lg')}
+              className={`px-1 py-0.5 rounded hover:text-white ${fontSize === 'lg' ? 'text-sky-400 font-bold' : ''}`}
+              title="Increase Font"
+            >
+              A+
+            </button>
+          </div>
 
           <span className="text-slate-600">|</span>
 
-          {/* Blockchain Network Status */}
-          <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                isConnected ? (isCorrectNetwork ? 'bg-emerald-400' : 'bg-amber-400') : 'bg-slate-500'
-              }`}
-            />
-            <span className="text-slate-200 font-mono text-[10px]">
-              {isConnected ? networkName : 'Wallet Disconnected'}
-            </span>
-          </div>
+          {/* Language Selector */}
+          <button
+            onClick={() => setLang(lang === 'English' ? 'हिन्दी' : 'English')}
+            className="flex items-center space-x-1 hover:text-white transition-colors cursor-pointer"
+          >
+            <span>{lang}</span>
+            <ChevronDown className="w-3 h-3 text-slate-400" />
+          </button>
         </div>
       </div>
     </div>

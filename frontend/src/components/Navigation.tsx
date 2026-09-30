@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  LayoutDashboard,
-  Users,
-  ShieldCheck,
-  Boxes,
-  CheckCircle,
-  FileCheck2,
+  Home,
+  User,
+  Shield,
+  Layers,
+  CheckCircle2,
+  FileText,
 } from 'lucide-react';
 import { Role } from '../types';
 
@@ -20,23 +20,23 @@ export type NavigationTab =
 interface NavigationProps {
   activeTab: NavigationTab;
   setActiveTab: (tab: NavigationTab) => void;
-  userRole: Role;
+  userRole?: Role;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
   const navItems = [
-    { id: 'dashboard', code: '01', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'identity', code: '02', label: 'Identity / DID', icon: Users },
-    { id: 'roles', code: '03', label: 'Roles & RBAC', icon: ShieldCheck },
-    { id: 'assets', code: '04', label: 'Digital Assets / NFT', icon: Boxes },
-    { id: 'verify', code: '05', label: 'Verification', icon: CheckCircle },
-    { id: 'audit', code: '06', label: 'Audit Trail', icon: FileCheck2 },
+    { id: 'dashboard', label: 'Dashboard', icon: Home },
+    { id: 'identity', label: 'Identity / DID', icon: User },
+    { id: 'roles', label: 'Access Control', icon: Shield },
+    { id: 'assets', label: 'Digital Assets / NFT', icon: Layers },
+    { id: 'verify', label: 'Verification', icon: CheckCircle2 },
+    { id: 'audit', label: 'Audit Trail', icon: FileText },
   ];
 
   return (
-    <nav className="bg-[#004B87] border-b border-[#003B6F] shadow-sm select-none">
+    <nav className="bg-white border-b border-slate-200 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex space-x-1 sm:space-x-2 overflow-x-auto py-1">
+        <div className="flex space-x-2 sm:space-x-3 overflow-x-auto py-2.5 scrollbar-none">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -44,17 +44,14 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab 
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id as NavigationTab)}
-                className={`flex items-center space-x-2 px-4 py-2.5 rounded-t text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap relative ${
+                className={`flex items-center space-x-2 px-3.5 sm:px-4 py-2 rounded-lg text-sm transition-all whitespace-nowrap cursor-pointer ${
                   isActive
-                    ? 'bg-white text-[#004B87] shadow-sm font-bold border-t-2 border-t-amber-400'
-                    : 'text-slate-100 hover:bg-[#003866] hover:text-white'
+                    ? 'bg-[#EBF3FC] text-[#0052CC] font-semibold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 font-medium'
                 }`}
               >
-                <span className={`text-[10px] font-mono ${isActive ? 'text-[#004B87] font-bold' : 'text-sky-200'}`}>
-                  {item.code}.
-                </span>
-                <Icon className={`w-4 h-4 ${isActive ? 'text-[#004B87]' : 'text-sky-200'}`} />
-                <span className="text-xs">{item.label}</span>
+                <Icon className={`w-4 h-4 ${isActive ? 'text-[#0052CC]' : 'text-slate-500'}`} />
+                <span>{item.label}</span>
               </button>
             );
           })}

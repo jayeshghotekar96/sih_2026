@@ -1,131 +1,106 @@
 import React from 'react';
 import { useWeb3 } from '../hooks/useWeb3';
-import { NationalEmblem } from './NationalEmblem';
-import { Shield, KeyRound, CheckCircle, ShieldAlert, Award, ChevronRight, LogOut, Wallet } from 'lucide-react';
+import { Wallet, LogOut, CheckCircle } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const {
     account,
     role,
-    identity,
     isConnected,
     isCorrectNetwork,
     networkName,
+    chainId,
     connectWallet,
     disconnectWallet,
-    switchNetwork,
   } = useWeb3();
 
-  const getRoleBadgeStyle = () => {
-    switch (role) {
-      case 'ADMIN':
-        return 'bg-red-50 text-red-800 border-red-300 font-bold';
-      case 'MANAGER':
-        return 'bg-blue-50 text-blue-800 border-blue-300 font-bold';
-      case 'AUDITOR':
-        return 'bg-purple-50 text-purple-800 border-purple-300 font-bold';
-      case 'USER':
-        return 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold';
-      default:
-        return 'bg-slate-100 text-slate-700 border-slate-300';
-    }
-  };
+  const formattedAccount = account
+    ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}`
+    : '';
 
   return (
-    <header className="bg-white border-b border-slate-200 shadow-xs select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <header className="bg-white border-b border-slate-200 select-none">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           
-          {/* Left: Official Bharat Electronics Logo */}
-          <div className="flex items-center space-x-4">
-            <a href="/" className="shrink-0 flex items-center">
-              <img
-                src="/bel-logo.png"
-                alt="Bharat Electronics Limited"
-                className="h-14 sm:h-16 w-auto object-contain"
-                onError={(e) => {
-                  // Fallback if image fails
-                  const target = e.currentTarget;
-                  target.style.display = 'none';
-                  const fallback = target.nextElementSibling as HTMLElement;
-                  if (fallback) fallback.style.display = 'flex';
-                }}
-              />
-              <div className="hidden items-center space-x-2">
-                <div className="w-12 h-12 rounded bg-[#004B87] text-white flex items-center justify-center font-bold text-xl">
-                  BEL
-                </div>
-                <div>
-                  <div className="font-bold text-slate-900 text-base">भारत इलेक्ट्रॉनिक्स</div>
-                  <div className="font-bold text-[#004B87] text-sm tracking-wide">BHARAT ELECTRONICS</div>
-                </div>
+          {/* Left: Official BEL Brand Header & Project Subtitle */}
+          <div className="flex items-center space-x-3 sm:space-x-4">
+            {/* BEL Logo Mark */}
+            <div className="flex items-center space-x-2 shrink-0">
+              <div className="w-12 h-11 rounded-lg bg-[#004B87] text-white flex items-center justify-center font-extrabold text-lg tracking-wider shadow-xs">
+                BEL
               </div>
-            </a>
+              <div className="leading-tight hidden sm:block">
+                <div className="font-extrabold text-[#002D54] text-xs tracking-tight">भारत इलेक्ट्रॉनिक्स</div>
+                <div className="font-extrabold text-[#004B87] text-xs tracking-tight">BHARAT ELECTRONICS</div>
+              </div>
+            </div>
 
             {/* Vertical Divider */}
-            <div className="hidden sm:block h-12 w-px bg-slate-200"></div>
+            <div className="h-10 w-px bg-slate-200 hidden sm:block"></div>
 
-            {/* Ministry & Enterprise Info */}
+            {/* Title & SIH Problem Statement */}
             <div>
               <div className="flex items-center space-x-2">
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
                   Bharat Electronics Limited
                 </h1>
-                <span className="hidden lg:inline text-xs font-semibold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
                   A Navratna Company
                 </span>
               </div>
-              <p className="text-xs text-slate-600 font-medium leading-normal">
-                Government of India, Ministry of Defence • CIN: L32309KA1954GOI000787
-              </p>
-              <p className="text-xs text-[#004B87] font-semibold mt-0.5">
+              <p className="text-xs text-slate-600 font-normal mt-0.5">
                 DecentraX: Blockchain Platform for Identity, Access Control & Asset Management (SIH26125)
               </p>
             </div>
           </div>
 
-          {/* Right: National Emblem + Wallet Authentication Bar */}
-          <div className="flex items-center space-x-4 self-end md:self-center">
-            {/* National Emblem of India */}
-            <div className="hidden sm:flex items-center pr-3 border-r border-slate-200">
-              <NationalEmblem className="w-9 h-12 text-slate-800" />
+          {/* Right: Network Status Pill & Connect Wallet Button */}
+          <div className="flex items-center space-x-3 shrink-0 self-end md:self-auto">
+            {/* Network Pill */}
+            <div className="border border-slate-200 bg-slate-50/80 rounded-xl px-3.5 py-1.5 text-right">
+              <div className="flex items-center space-x-1.5 justify-end">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                <span className="text-xs font-semibold text-slate-800">
+                  {isConnected ? networkName : 'Polygon Amoy Testnet'}
+                </span>
+              </div>
+              <div className="text-[10px] text-slate-500 font-mono">
+                Chain ID: {chainId || 80002}
+              </div>
             </div>
 
-            {/* Wallet State & User Actions */}
-            <div className="flex items-center space-x-2">
-              {isConnected && account ? (
-                <div className="flex items-center space-x-2">
-                  {/* Role Badge */}
-                  <div className={`px-2.5 py-1 rounded text-xs border ${getRoleBadgeStyle()} flex items-center space-x-1.5 shadow-2xs`}>
-                    <Shield className="w-3.5 h-3.5" />
-                    <span>{role}</span>
+            {/* Wallet Button */}
+            {!isConnected ? (
+              <button
+                onClick={connectWallet}
+                className="bg-[#0052CC] hover:bg-[#0047B3] text-white px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center space-x-2 shadow-xs transition-colors cursor-pointer"
+              >
+                <Wallet className="w-4 h-4" />
+                <span>Connect Wallet</span>
+              </button>
+            ) : (
+              <div className="flex items-center space-x-2 bg-slate-50 border border-slate-200 rounded-lg p-1.5">
+                <div className="px-2 py-1 text-left">
+                  <div className="flex items-center space-x-1">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                    <span className="text-xs font-mono font-semibold text-slate-800">
+                      {formattedAccount}
+                    </span>
                   </div>
-
-                  {/* Account Pill */}
-                  <div className="bg-slate-100 border border-slate-200 px-3 py-1 rounded text-xs font-mono text-slate-800">
-                    <span className="text-slate-500 mr-1.5">Wallet:</span>
-                    <span className="font-semibold">{account.substring(0, 6)}...{account.substring(account.length - 4)}</span>
-                  </div>
-
-                  {/* Disconnect Button */}
-                  <button
-                    onClick={disconnectWallet}
-                    className="p-1.5 rounded hover:bg-slate-100 text-slate-500 hover:text-rose-600 border border-transparent hover:border-slate-200 transition-colors"
-                    title="Disconnect Wallet"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
+                  <span className="text-[10px] uppercase font-bold text-blue-700 bg-blue-50 px-1.5 py-0.2 rounded inline-block mt-0.5">
+                    {role}
+                  </span>
                 </div>
-              ) : (
                 <button
-                  onClick={connectWallet}
-                  className="decentra-btn-primary flex items-center space-x-2"
+                  onClick={disconnectWallet}
+                  title="Disconnect"
+                  className="p-1.5 rounded hover:bg-slate-200 text-slate-500 hover:text-rose-600 transition-colors"
                 >
-                  <Wallet className="w-4 h-4" />
-                  <span>Connect MetaMask</span>
+                  <LogOut className="w-3.5 h-3.5" />
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
         </div>
