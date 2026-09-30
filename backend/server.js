@@ -25,13 +25,18 @@ app.get('/api/health', (req, res) => {
 });
 
 // Ensure local IPFS storage cache directory exists
-const IPFS_STORAGE_DIR = path.join(__dirname, 'storage', 'ipfs');
+const IPFS_STORAGE_DIR = process.env.VERCEL
+  ? path.join('/tmp', 'ipfs')
+  : path.join(__dirname, 'storage', 'ipfs');
+
 if (!fs.existsSync(IPFS_STORAGE_DIR)) {
   fs.mkdirSync(IPFS_STORAGE_DIR, { recursive: true });
 }
 
 // In-memory / file-persisted audit log index
-const AUDIT_LOG_FILE = path.join(__dirname, 'storage', 'audit_logs.json');
+const AUDIT_LOG_FILE = process.env.VERCEL
+  ? path.join('/tmp', 'audit_logs.json')
+  : path.join(__dirname, 'storage', 'audit_logs.json');
 let auditLogsCache = [];
 
 if (fs.existsSync(AUDIT_LOG_FILE)) {
@@ -316,7 +321,11 @@ app.get('/api/system/health', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`[DecentraX Security Gateway] Running on port ${PORT}`);
-  console.log(`[DecentraX] IPFS Storage cache initialized at: ${IPFS_STORAGE_DIR}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[DecentraX Security Gateway] Running on port ${PORT}`);
+    console.log(`[DecentraX] IPFS Storage cache initialized at: ${IPFS_STORAGE_DIR}`);
+  });
+}
+
+export default app;

@@ -12,13 +12,30 @@ async function main() {
   const balance = await hre.ethers.provider.getBalance(deployer.address);
   console.log(`Account balance: ${hre.ethers.formatEther(balance)} ETH`);
 
-  // 1. Deploy DecentraXAccessControl
-  console.log("\n[1/4] Deploying DecentraXAccessControl...");
+  // 1. Deploy or Attach DecentraXAccessControl
+  console.log("\n[1/4] Checking/Deploying DecentraXAccessControl...");
   const AccessControlFactory = await hre.ethers.getContractFactory("DecentraXAccessControl");
-  const accessControl = await AccessControlFactory.deploy(deployer.address);
-  await accessControl.waitForDeployment();
-  const accessControlAddress = await accessControl.getAddress();
-  console.log(`✓ DecentraXAccessControl deployed at: ${accessControlAddress}`);
+  let accessControl;
+  let accessControlAddress = process.env.ACCESS_CONTROL_ADDRESS;
+
+  if (hre.network.name === "amoy" && !accessControlAddress) {
+    // Check known deployed contract from previous run
+    const knownAddress = "0x1d1d0957476A63fFfA4B43Ea22F7fA1DC816A57D";
+    const code = await hre.ethers.provider.getCode(knownAddress);
+    if (code && code !== "0x") {
+      accessControlAddress = knownAddress;
+      console.log(`✓ Reusing already deployed DecentraXAccessControl at: ${accessControlAddress}`);
+    }
+  }
+
+  if (accessControlAddress) {
+    accessControl = AccessControlFactory.attach(accessControlAddress);
+  } else {
+    accessControl = await AccessControlFactory.deploy(deployer.address);
+    await accessControl.waitForDeployment();
+    accessControlAddress = await accessControl.getAddress();
+    console.log(`✓ DecentraXAccessControl deployed at: ${accessControlAddress}`);
+  }
 
   // 2. Deploy IdentityRegistry
   console.log("\n[2/4] Deploying IdentityRegistry...");
